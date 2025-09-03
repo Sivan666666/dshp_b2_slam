@@ -60,6 +60,8 @@ target_link_libraries(close_all_node unitree_sdk2)
 add_executable(rslidar_dds_test unitree_slam_example/rslidar_dds_test.cpp)
 target_link_libraries(rslidar_dds_test unitree_sdk2)
 
+add_executable(out_in_stairwell unitree_slam_example/out_in_stairwell.cpp)
+target_link_libraries(out_in_stairwell unitree_sdk2)
 add_executable(demo_b2 unitree_slam_example/demo_b2.cpp)
 target_link_libraries(demo_b2 unitree_sdk2)
 add_executable(demo_xt16 unitree_slam_example/demo_xt16.cpp)
