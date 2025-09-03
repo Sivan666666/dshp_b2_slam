@@ -1,4 +1,4 @@
-#include "<unitree/common/dds/dds_easy_model.hpp>"
+#include "unitree/common/dds/dds_easy_model.hpp"
 #include <unitree/robot/channel/channel_publisher.hpp>
 #include <unitree/robot/channel/channel_subscriber.hpp>
 
@@ -70,6 +70,7 @@ public:
     void startRelocation();
     void initPose();
     void startNavigation();
+    void singleNavigation();
     void defaultNavigation();
     void addNodeAndEdge();
     void addEdge(u_int16_t edge_name, u_int16_t start_node, u_int16_t end_node);
