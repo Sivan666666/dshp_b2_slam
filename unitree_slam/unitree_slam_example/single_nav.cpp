@@ -19,7 +19,7 @@ int main(int argc, const char **argv)
     // Go to the location with node name 1
     send_msg.seq_().data() = "index:123;";   // The value 123 is set by the user (1-10000).
     send_msg.command_() = 9;                 // 9 is a single node navigation command
-    send_msg.node_edge_name_().push_back(1); // Target node name
+    send_msg.node_edge_name_().push_back(int(argv[2])); // Target node name
 
     publisher->Write(send_msg);
     std::cout << "send single nav command" << std::endl;

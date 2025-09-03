@@ -245,6 +245,7 @@ void slamDemo::addNodeAndEdge()
 
     nodeAttributeList.push_back(nodeTemp);
 
+    cout << "Add Node.Name,X,Y,Z,Yaw:" << node_name << "," << nodeTemp.nodeX << "," << nodeTemp.nodeY << "," << nodeTemp.nodeZ << "," << nodeTemp.nodeYaw << endl;
     cout << "Add Node.   Name: " << node_name << "  X:" << nodeTemp.nodeX << "  Y:" << nodeTemp.nodeY << "  Z:" << nodeTemp.nodeY << "  Yaw:" << nodeTemp.nodeYaw << endl;
     if (node_name >= 2)
         addEdge(node_name - 1, node_name - 1, node_name); // Sequential connection nodes
