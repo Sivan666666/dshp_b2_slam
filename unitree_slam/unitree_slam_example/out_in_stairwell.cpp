@@ -70,7 +70,7 @@ public:
     void startRelocation();
     void initPose();
     void startNavigation();
-    void singleNavigation();
+    void singleNavigation(int);
     void defaultNavigation();
     void addNodeAndEdge();
     void addEdge(u_int16_t edge_name, u_int16_t start_node, u_int16_t end_node);
@@ -484,7 +484,7 @@ void navigateFromFile(const std::string& filename, slamDemo& slamTest)
 
 #include <unistd.h>
 
-void no_signal()
+int no_signal()
 {
     return false; // Placeholder for actual signal checking logic
 }
@@ -493,8 +493,8 @@ int main(int argc, const char **argv)
 {
     while(no_signal())
         sleep(1);
-    std::string filename = argv[0];
-    slamDemo slamTest;
+    std::string filename = argv[1];
+    slamDemo slamTest(argv[0]);
     navigateFromFile(filename, slamTest);
     return 0;
 }
