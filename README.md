@@ -14,3 +14,13 @@ unitree_slam/unitree_slam_example/demo_b2
 测试：
 测目标点
 unitree_slam/unitree_slam_example/single_nav.cpp
+
+记录routing:
+source ~/unitree_ros2/setup.sh 
+ros2 topic list # 检查
+sudo ./demo_b2 enx98fc84e04d87 | tee routing.txt
+
+巡迹demo:
+source ~/unitree_ros2/setup.sh 
+ros2 topic list # 检查
+sudo ./out_in_stairwell enx98fc84e04d87 routing.2.txt 
