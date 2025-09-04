@@ -12,6 +12,7 @@
 #include <termio.h>
 #include <cmath>
 #include <ctime>
+#include <unistd.h>
 
 #define COMMANDTOPIC "rt/qt_command"
 #define NOTICETOPIC "rt/qt_notice"
@@ -257,7 +258,7 @@ void slamDemo::addNodeAndEdge()
     nodeAttributeList.push_back(nodeTemp);
 
     cout << "Add Node.Name,X,Y,Z,Yaw:" << node_name << "," << nodeTemp.nodeX << "," << nodeTemp.nodeY << "," << nodeTemp.nodeZ << "," << nodeTemp.nodeYaw << endl;
-    cout << "Add Node.   Name: " << node_name << "  X:" << nodeTemp.nodeX << "  Y:" << nodeTemp.nodeY << "  Z:" << nodeTemp.nodeY << "  Yaw:" << nodeTemp.nodeYaw << endl;
+    cout << "Add Node.   Name: " << node_name << "  X:" << nodeTemp.nodeX << "  Y:" << nodeTemp.nodeY << "  Z:" << nodeTemp.nodeZ << "  Yaw:" << nodeTemp.nodeYaw << endl;
     if (node_name >= 2)
         addEdge(node_name - 1, node_name - 1, node_name); // Sequential connection nodes
 }
@@ -451,38 +452,63 @@ void slamDemo::keyExecute()
 void navigateFromFile(const std::string& filename, slamDemo& slamTest)
 {
     std::ifstream infile(filename);
+    if (!infile.is_open()) {
+        cout << "Error: Cannot open file " << filename << endl;
+        return;
+    }
+    
     std::string line;
+    slamTest.closeAllNode();
     slamTest.deleteAllNode();
     slamTest.deleteAllEdge();
     slamTest.startRelocation(); // 先重定位
+    cout << "after startRelocation" << endl;
     slamTest.startNavigation();
+    cout << "after startNavigation" << endl;
     slamTest.initPose();
+    cout << "after initPose" << endl;
+    sleep(10);
 
     while (std::getline(infile, line))
     {
+        if (line.empty()) continue;
+        
         std::istringstream iss(line);
         std::string token;
-        int nodename;
-        float x, y, z, yaw;
-        if (std::getline(iss, token, ',')) nodename = std::stoi(token);
-        if (std::getline(iss, token, ',')) x = std::stof(token);
-        if (std::getline(iss, token, ',')) y = std::stof(token);
-        if (std::getline(iss, token, ',')) z = std::stof(token);
-        if (std::getline(iss, token, ',')) yaw = std::stof(token);
-        cout << "nodename, x, y, z, yaw:" << nodename
-            << ", " << x 
-            << ", " << y
-            << ", " << z
-            << ", " << yaw
-            << endl;
-        // 设置目标点（假设有设置目标点的接口）
-        // slamTest.setTargetPose(x, y, z, yaw); // 需要你自己实现
-        slamTest.singleNavigation(nodename); // 导航到该点
-        // 可加等待或判断到达
+        try {
+            int nodename;
+            float x, y, z, yaw;
+            if (std::getline(iss, token, ',')) nodename = std::stoi(token);
+            else continue;
+            if (std::getline(iss, token, ',')) x = std::stof(token);
+            else continue;
+            if (std::getline(iss, token, ',')) y = std::stof(token);
+            else continue;
+            if (std::getline(iss, token, ',')) z = std::stof(token);
+            else continue;
+            if (std::getline(iss, token, ',')) yaw = std::stof(token);
+            else continue;
+            
+            cout << "nodename, x, y, z, yaw:" << nodename
+                << ", " << x 
+                << ", " << y
+                << ", " << z
+                << ", " << yaw
+                << endl;
+            // 设置目标点（假设有设置目标点的接口）
+            // slamTest.setTargetPose(x, y, z, yaw); // 需要你自己实现
+            slamTest.singleNavigation(nodename); // 导航到该点
+            // 可加等待或判断到达
+            sleep(10);
+        } catch (const std::exception& e) {
+            cout << "Error parsing line: " << line << " - " << e.what() << endl;
+            continue;
+        }
     }
+    slamTest.initPose();
+    slamTest.closeAllNode();
+    infile.close();
 }
-
-#include <unistd.h>
 
 int no_signal()
 {
@@ -491,10 +517,16 @@ int no_signal()
 
 int main(int argc, const char **argv)
 {
+    if (argc < 3) {
+        cout << "Usage: " << argv[0] << " <network_interface> <filename>" << endl;
+        return -1;
+    }
+    
     while(no_signal())
         sleep(1);
-    std::string filename = argv[1];
-    slamDemo slamTest(argv[0]);
+        
+    std::string filename = argv[2];
+    slamDemo slamTest(argv[1]);
     navigateFromFile(filename, slamTest);
     return 0;
 }
