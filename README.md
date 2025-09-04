@@ -24,3 +24,9 @@ sudo ./demo_b2 enx98fc84e04d87 | tee routing.txt
 source ~/unitree_ros2/setup.sh 
 ros2 topic list # 检查
 sudo ./out_in_stairwell enx98fc84e04d87 routing.2.txt 
+
+
+=======
+工单账号
+hanjiatong_1224@163.com
+qwer1234
