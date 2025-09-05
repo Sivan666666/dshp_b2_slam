@@ -434,6 +434,12 @@ void slamDemo::keyExecute()
 
 int main(int argc, const char **argv)
 {
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <network_interface>" << std::endl;
+        std::cerr << "Example: " << argv[0] << " eth0" << std::endl;
+        return 1;
+    }
+    
     slamDemo slamTest(argv[1]); //// argv[1]：The name of the network card with network segment 123
     slamTest.keyExecute();
     return 0;
